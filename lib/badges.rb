@@ -4,6 +4,13 @@ require 'httparty'
 module Badges
   class Badge
     include HTTParty
+    attr_reader :user_id, :profile_url
+    
+    def initialize(user_id, base_url)
+      @user_id = user_id
+      @profile_url = base_url + user_id
+      @response = get(profile_url + '.json')
+    end
     
     private
     
@@ -17,13 +24,8 @@ module Badges
   end
   
   class CodeSchool < Badge
-    attr_reader :profile_url, :username
-    
-    def initialize(username)
-      @username = username
-      @profile_url = 'http://www.codeschool.com/users/' + @username
-      
-      @response = get(@profile_url + '.json')
+    def initialize(user_id)
+      super(user_id, 'http://www.codeschool.com/users/')
     end
     
     def avatar_url
@@ -76,13 +78,8 @@ module Badges
   end
   
   class Treehouse < Badge
-    attr_reader :profile_name, :profile_url
-    
-    def initialize(profile_name)
-      @profile_name = profile_name
-      @profile_url = 'http://teamtreehouse.com/' + @profile_name
-      
-      @response = get(@profile_url + '.json')
+    def initialize(user_id)
+      super(user_id, 'http://teamtreehouse.com/')
     end
     
     def badges
@@ -126,3 +123,5 @@ module Badges
     end
   end
 end
+
+require 'badges/railtie' if defined?(Rails)
