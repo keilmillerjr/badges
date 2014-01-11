@@ -21,6 +21,12 @@ module Badges
         nil
       end
     end
+    
+    def obtain_key(hash, key)
+      if hash.has_key?(key)
+        hash[key]
+      end
+    end
   end
   
   class CodeSchool < Badge
@@ -29,51 +35,32 @@ module Badges
     end
     
     def avatar_url
-      begin
-        @response['user']['avatar']
-      rescue
-        nil
-      end
+      user = obtain_key @response, 'user'
+      obtain_key user, 'avatar' if !user.blank?
     end
     
     def badges
-      begin
-        @response['badges']
-      rescue
-        nil
-      end
+      obtain_key @response, 'badges'
     end
     
     def courses_completed
-      begin
-        @response['courses']['completed']
-      rescue
-        nil
-      end
+      courses = obtain_key @response, 'courses'
+      obtain_key courses, 'completed' if !courses.blank?
     end
     
     def courses_in_progress
-      begin
-        @response['courses']['in_progress']
-      rescue
-        nil
-      end
+      courses = obtain_key @response, 'courses'
+      obtain_key courses, 'in_progress' if !courses.blank?
     end
     
     def member_since
-      begin
-        @response['user']['member_since']
-      rescue
-        nil
-      end
+      user = obtain_key @response, 'user'
+      obtain_key user, 'member_since' if !user.blank?
     end
     
     def total_score
-      begin
-        @response['user']['total_score']
-      rescue
-        nil
-      end
+      user = obtain_key @response, 'user'
+      obtain_key user, 'total_score' if !user.blank?
     end
   end
   
@@ -83,43 +70,24 @@ module Badges
     end
     
     def badges
-      begin
-        @response['badges']
-      rescue
-        nil
-      end
+      obtain_key @response, 'badges'
     end
     
     def gravatar_url
-      begin
-        @response['gravatar_url']
-      rescue
-        nil
-      end
+      obtain_key @response, 'gravatar_url'
     end
     
     def name
-      begin
-        @response['name']
-      rescue
-        nil
-      end
+      obtain_key @response, 'name'
     end
     
     def points
-      begin
-        @response['points']
-      rescue
-        nil
-      end
+      obtain_key @response, 'points'
     end
     
     def points_total
-      begin
-        @response['points']['total']
-      rescue
-        nil
-      end
+      points = obtain_key @response, 'points'
+      obtain_key points, 'total' if !points.blank?
     end
   end
 end
