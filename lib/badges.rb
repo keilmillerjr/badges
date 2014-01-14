@@ -72,15 +72,15 @@ module Badges
       super(user_id, 'http://teamtreehouse.com/')
     end
     
+    def avatar_url
+      obtain_key @response, 'gravatar_url'
+    end
+    
     def badges
       obtain_key @response, 'badges'
     end
     
-    def gravatar_url
-      obtain_key @response, 'gravatar_url'
-    end
-    
-    def name
+    def full_name
       obtain_key @response, 'name'
     end
     
