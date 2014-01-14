@@ -1,10 +1,11 @@
 require 'badges/version'
+require 'active_support/core_ext/object/blank'
 require 'httparty'
 
 module Badges
   class Badge
     include HTTParty
-    attr_reader :user_id, :profile_url
+    attr_reader :user_id, :profile_url, :response
     
     def initialize(user_id, base_url)
       @user_id = user_id
@@ -32,6 +33,8 @@ module Badges
   class CodeSchool < Badge
     def initialize(user_id)
       super(user_id, 'http://www.codeschool.com/users/')
+      
+      @response = nil if obtain_key(@response, 'error')
     end
     
     def avatar_url

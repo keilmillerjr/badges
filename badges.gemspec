@@ -20,6 +20,7 @@ Gem::Specification.new do |spec|
 
   spec.required_ruby_version = '>= 1.9.3'
   
+  spec.add_dependency 'activesupport'
   spec.add_dependency 'httparty'
   spec.add_dependency 'markaby'
   
