@@ -2,7 +2,9 @@ require 'markaby'
 
 module Badges
   module ViewHelpers
-    def list_badges(obj, options={})   
+    def list_badges(obj, options={})
+      return if obj.response.blank?
+      
       # Code School
          
       # badges
@@ -13,7 +15,7 @@ module Badges
           obj.badges.each do |course|
             li do
               if options[:codeschool_badges][:link]
-                a href: course['url'] do
+                a href: course['course_url'] do
                   img src: course['badge'] if options[:codeschool_badges][:image]
                   span course['name'] if options[:codeschool_badges][:text]
                 end
