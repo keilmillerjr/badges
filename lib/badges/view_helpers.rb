@@ -3,25 +3,25 @@ require 'markaby'
 module Badges
   module ViewHelpers
     def list_badges(obj, options={})
-      return if obj.response.blank?
+      return unless obj.code == 200
       
       # Code School
-         
+      
       # badges
-      if !options[:codeschool_badges].blank? && !obj.badges.blank?
+      unless options[:codeschool_badges].blank? || obj.body.badges.blank?
         html = Markaby::Builder.new
         
         html.send :ul, ({id: options[:id]} if options[:id]), ({class: options[:class]} if options[:class]) do
-          obj.badges.each do |course|
+          obj.body.badges.each do |course|
             li do
               if options[:codeschool_badges][:link]
-                a href: course['course_url'] do
-                  img src: course['badge'] if options[:codeschool_badges][:image]
-                  span course['name'] if options[:codeschool_badges][:text]
+                a href: course.course_url do
+                  img src: course.badge if options[:codeschool_badges][:image]
+                  span course.name if options[:codeschool_badges][:text]
                 end
               else
-                img src: course['badge'] if options[:codeschool_badges][:image]
-                span course['name'] if options[:codeschool_badges][:text]
+                img src: course.badge if options[:codeschool_badges][:image]
+                span course.name if options[:codeschool_badges][:text]
               end
             end
           end
@@ -31,20 +31,20 @@ module Badges
       end
       
       # courses completed
-      if !options[:codeschool_courses_completed].blank? && !obj.courses_completed.blank?
+      unless options[:codeschool_courses_completed].blank? || obj.body.courses.completed.blank?
         html = Markaby::Builder.new
         
         html.send :ul, ({id: options[:id]} if options[:id]), ({class: options[:class]} if options[:class]) do
-          obj.courses_completed.each do |course|
+          obj.body.courses.completed.each do |course|
             li do
               if options[:codeschool_courses_completed][:link]
-                a href: course['url'] do
-                  img src: course['badge'] if options[:codeschool_courses_completed][:image]
-                  span course['title'] if options[:codeschool_courses_completed][:text]
+                a href: course.url do
+                  img src: course.badge if options[:codeschool_courses_completed][:image]
+                  span course.title if options[:codeschool_courses_completed][:text]
                 end
               else
-                img src: course['badge'] if options[:codeschool_courses_completed][:image]
-                span course['title'] if options[:codeschool_courses_completed][:text]
+                img src: course.badge if options[:codeschool_courses_completed][:image]
+                span course.title if options[:codeschool_courses_completed][:text]
               end
             end
           end
@@ -54,20 +54,20 @@ module Badges
       end
       
       # courses in progress
-      if !options[:codeschool_courses_in_progress].blank? && !obj.courses_in_progress.blank?
+      unless options[:codeschool_courses_in_progress].blank? || obj.body.courses.in_progress.blank?
         html = Markaby::Builder.new
         
         html.send :ul, ({id: options[:id]} if options[:id]), ({class: options[:class]} if options[:class]) do
-          obj.courses_in_progress.each do |course|
+          obj.body.courses.in_progress.each do |course|
             li do
               if options[:codeschool_courses_in_progress][:link]
-                a href: course['url'] do
-                  img src: course['badge'] if options[:codeschool_courses_in_progress][:image]
-                  span course['title'] if options[:codeschool_courses_in_progress][:text]
+                a href: course.url do
+                  img src: course.badge if options[:codeschool_courses_in_progress][:image]
+                  span course.title if options[:codeschool_courses_in_progress][:text]
                 end
               else
-                img src: course['badge'] if options[:codeschool_courses_in_progress][:image]
-                span course['title'] if options[:codeschool_courses_in_progress][:text]
+                img src: course.badge if options[:codeschool_courses_in_progress][:image]
+                span course.title if options[:codeschool_courses_in_progress][:text]
               end
             end
           end
@@ -79,20 +79,20 @@ module Badges
       # Treehouse
       
       # badges
-      if !options[:treehouse_badges].blank? && !obj.badges.blank?
+      unless options[:treehouse_badges].blank? || obj.body.badges.blank?
         html = Markaby::Builder.new
         
         html.send :ul, ({id: options[:id]} if options[:id]), ({class: options[:class]} if options[:class]) do
-          obj.badges.each do |course|
+          obj.body.badges.each do |course|
             li do
               if options[:treehouse_badges][:link]
-                a href: course['url'] do
-                  img src: course['icon_url'] if options[:treehouse_badges][:image]
-                  span course['name'] if options[:treehouse_badges][:text]
+                a href: course.url do
+                  img src: course.icon_url if options[:treehouse_badges][:image]
+                  span course.name if options[:treehouse_badges][:text]
                 end
               else
-                img src: course['icon_url'] if options[:treehouse_badges][:image]
-                span course['name'] if options[:treehouse_badges][:text]
+                img src: course.icon_url if options[:treehouse_badges][:image]
+                span course.name if options[:treehouse_badges][:text]
               end
             end
           end

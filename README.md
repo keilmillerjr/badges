@@ -29,100 +29,59 @@ Or install it yourself as:
 
 ## Class usage
 
-CodeSchool example:
+Both *Badges::CodeSchool* and *Badges::Treehouse* are a subclass of *Request*. Because of this, they share the same methods and variables, and function in exactly the same way. Examples following the first will be considerably shorter.
+
+#### Badges::CodeSchool
+
+Create a new instance of a CodeSchool badge request.
 
     codeschool = Badges::CodeSchool.new('username')
     
-    codeschool.response
-    => nil # if false username
-    
-    codeschool.username
-    => "username"
+Badges gem knows the proper url for the request. If the base url for the request happens to change one day, you can optionally pass in a different base url and the gem will use that instead.
+
+    codeschool = Badges::CodeSchool.new('username', 'http://www.codeschool.com/users/')
+
+CodeSchool is a subclass of Request, so it inherits these useful methods and variables pertaining to your api request.
+
+    codeschool.user_id
+    => "user"
     
     codeschool.profile_url
     => "http://www.codeschool.com/users/username"
     
-    codeschool.avatar_url
+    codeschool.valid?
+    => true
+    
+    codeschool.code
+    => 200
+    
+    codeschool.message
+    => "OK"
+    
+Any error in the request will yield a message in the console or log.
+    
+Retrieved JSON is stored as a plain Ruby object inside the variable *codeschool.body*. Here's an example of proper usage:
+
+    codeschool.body.user.avatar
     => "http://example.com/avatar.jpg"
-    
-    codeschool.badges
-    => [{"name"=>"Badge", "badge"=>"http://example.com/badge.png", "course_url"=>"http://example.com"}]
-    
-    codeschool.courses_completed
-    => [{"title"=>"Course", "url"=>"http://example.com", "badge"=>"http://example.com/badge.png"}]
-    
-    codeschool.courses_in_progress
-    => [{"title"=>"Course", "url"=>"http://example.com", "badge"=>"http://example.com/badge.png"}]
-    
-    codeschool.member_since
-    => "2011-03-22T06:54:21Z"
-    
-    codeschool.total_score
-    => "<b>114225</b>"
-    
-Team Treehouse example:
 
-    treehouse = Badges::Treehouse.new('profile_name')
+    codeschool.body.courses.completed.count
+    => 11
     
-    treehouse.response
-    => nil # if false username
-    
-    treehouse.profile_name
-    => "profile_name"
-    
-    treehouse.profile_url
-    => "http://teamtreehouse.com/profile_name"
-    
-    treehouse.avatar_url
-    => "http://example.com/avatar.jpg"
-    
-    treehouse.badges
-    => [{"id"=>49, "name"=>"Badge", "url"=>"http://example.com", "icon_url"=>"http://example.com/badge.png", "earned_date"=>"2012-09-11T18:41:13Z", "courses"=>[]}]
-    
-    treehouse.full_name
-    => "First Last"
-    
-    treehouse.points
-    => {"total"=>1740, "html"=>447, "css"=>483, "javascript"=>0, "ruby"=>0, "ios"=>0, "business"=>0, "android"=>0, "php"=>0, "wordpress"=>0, "design"=>180, "dev tools"=>0}
-    
-    treehouse.points_android
-    => 1
-    
-    treehouse.points_business
-    => 1
-    
-    treehouse.points_css
-    => 1
-    
-    treehouse.points_design
-    => 1
-    
-    treehouse.points_dev_tools
-    => 1
-    
-    treehouse.points_html
-    => 1
-    
-    treehouse.points_ios
-    => 1
-    
-    treehouse.points_javascript
-    => 1
-    
-    treehouse.points_php
-    => 1
-    
-    treehouse.points_ruby
-    => 1
-    
-    treehouse.points_total
-    => 10
-    
-    treehouse.points_wordpress
+    codeschool.body.courses.completed[0].title
+    => "Rails for Zombies"
 
-## Rails helpers
+You can view all the attributes of the JSON request online in a nice tree view gui by using the [Json Editor Online](http://www.jsoneditoronline.org).
 
-Create new badge object in your controller.
+#### Badges::Treehouse
+
+    treehouse = Badges::Treehouse.new('username')
+
+## Rails view helpers
+
+#### list_badges
+
+Create a new instance of a badge request in the controller.
 
     class BadgesController < ApplicationController
       def index
@@ -131,20 +90,22 @@ Create new badge object in your controller.
       end
     end
 
-Inside your view, use the class methods directly, or the list_badges helper to create a list of badges. Params left out are assumed to be false.
+Inside your view, use the list_badges view helper to create a list of badges. Params left out are assumed to be false. You can also use class methods and variables inside the view.
 
     <h1>Badges#index</h1>
     <p>Find me in app/views/badges/index.html.erb</p>
     
-    <%= image_tag @codeschool.avatar_url %>
-    <%= list_badges @codeschool, codeschool_badges: {image: true, link: true, text: true}, id: 'test', class: 'test' %>
-    <%= list_badges @codeschool, codeschool_courses_completed: {image: true, link: true, text: true}, id: 'test', class: 'test' %>
-    <%= list_badges @codeschool, codeschool_courses_in_progress: {image: true, link: true, text: true}, id: 'test', class: 'test' %>
+    <%= image_tag @codeschool.body.user.avatar %>
+    <%= list_badges @codeschool, codeschool_badges: {image: true, link: true, text: true}, id: 'codeschool_badges', class: 'badges' %>
+    <%= list_badges @codeschool, codeschool_courses_completed: {image: true, link: true, text: true}, id: 'codeschool_courses_completed', class: 'badges' %>
+    <%= list_badges @codeschool, codeschool_courses_in_progress: {image: true, link: true, text: true}, id: 'codeschool_courses_in_progress', class: 'badges' %>
     
-    <%= @treehouse.avatar_url %>
-    <%= list_badges @treehouse, treehouse_badges: {image: true, link: true, text: true}, id: 'test', class: 'test' %>
+    <%= image_tag @treehouse.body.gravatar_url %>
+    <%= list_badges @treehouse, treehouse_badges: {image: true, link: true, text: true}, id: 'treehouse_badges', class: 'badges' %>
 
 Tip: Use css/sass afterwards to style this list appropriately.
+
+*list_badges* will render nothing if there is an error in the request. Check the console or log for an error message.
 
 ## Contributing
 

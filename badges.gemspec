@@ -22,6 +22,7 @@ Gem::Specification.new do |spec|
   
   spec.add_dependency 'activesupport'
   spec.add_dependency 'httparty'
+  spec.add_dependency 'dish'
   spec.add_dependency 'markaby'
   
   spec.add_development_dependency 'bundler', '~> 1.3'
